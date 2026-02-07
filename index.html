@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Be My Valentine?</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary-pink: #ffafbd;
+            --dark-pink: #ff4b6e;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffeef0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden;
+            margin: 0;
+            touch-action: manipulation; /* Prevents accidental zooming */
+        }
+
+        .container {
+            text-align: center;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-width: 400px;
+            width: 85%;
+            z-index: 10;
+        }
+
+        #main-gif {
+            width: 100%;
+            max-width: 150px;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            color: var(--dark-pink);
+            font-size: 1.4rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            min-height: 120px; /* Extra room for growing button */
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s ease-in-out;
+            -webkit-tap-highlight-color: transparent; /* Removes blue flash on iPhone */
+        }
+
+        #yes-btn {
+            background-color: #4CAF50;
+            color: white;
+            z-index: 5;
+        }
+
+        #no-btn {
+            background-color: var(--dark-pink);
+            color: white;
+            position: relative; 
+            z-index: 100;
+            touch-action: none; /* Crucial for iOS movement */
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="question-container">
+       <img id="main-gif" src="cat.gif" alt="My Girl">
+        <h1>Will you be my Valentine? 💖</h1>
+        
+        <div class="btn-group">
+            <button id="yes-btn">Yes</button>
+            <button id="no-btn">No</button>
+        </div>
+    </div>
+
+    <div class="container hidden" id="success-container">
+        <img id="success-gif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3ZidXF4ZzZueG52ZzZueG52ZzZueG52ZzZueG52ZzZueG52JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/KztT2c4u8mYYUiMKdJ/giphy.gif" style="width: 180px;" alt="Happy bear">
+        <h1>Yay! See you on the 14th! 🥰</h1>
+    </div>
+
+    <script>
+        const noBtn = document.getElementById('no-btn');
+        const yesBtn = document.getElementById('yes-btn');
+        const questionContainer = document.getElementById('question-container');
+        const successContainer = document.getElementById('success-container');
+
+        let yesScale = 1;
+
+        const moveButton = () => {
+            // Calculate area to keep button visible but random
+            // We subtract 100px from height/width to keep it from going off-screen
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 20);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 20);
+            
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = `${Math.max(10, x)}px`;
+            noBtn.style.top = `${Math.max(10, y)}px`;
+
+            yesScale += 0.35;
+            yesBtn.style.transform = `scale(${yesScale})`;
+        };
+
+        // Triggers for both Desktop and iPhone
+        noBtn.addEventListener('mouseover', moveButton);
+        noBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // Prevents clicking the button on mobile
+            moveButton();
+        });
+
+        yesBtn.addEventListener('click', () => {
+            questionContainer.classList.add('hidden');
+            successContainer.classList.remove('hidden');
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#ffafbd', '#ff4b6e', '#ffffff']
+            });
+        });
+    </script>
+</body>
+</html>
